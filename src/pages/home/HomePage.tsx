@@ -352,7 +352,7 @@ export function HomePage() {
           </p>
           <div className="pt-2">
             <Link
-              to="/books"
+              to="/app/books"
               className="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm transition-all duration-200 shadow-lg shadow-indigo-600/10 cursor-pointer"
             >
               Cari Buku Sekarang
@@ -364,7 +364,7 @@ export function HomePage() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Link
-          to="/books"
+          to="/app/books"
           className="group block p-6 bg-neutral-900 hover:bg-neutral-800/80 border border-neutral-800 hover:border-indigo-500/30 rounded-2xl transition-all duration-300"
         >
           <div className="h-12 w-12 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold mb-4 group-hover:scale-110 transition-transform">
@@ -377,7 +377,7 @@ export function HomePage() {
         </Link>
 
         <Link
-          to="/borrows"
+          to="/app/borrows"
           className="group block p-6 bg-neutral-900 hover:bg-neutral-800/80 border border-neutral-800 hover:border-indigo-500/30 rounded-2xl transition-all duration-300"
         >
           <div className="h-12 w-12 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold mb-4 group-hover:scale-110 transition-transform">
@@ -390,7 +390,7 @@ export function HomePage() {
         </Link>
 
         <Link
-          to="/fines"
+          to="/app/fines"
           className="group block p-6 bg-neutral-900 hover:bg-neutral-800/80 border border-neutral-800 hover:border-indigo-500/30 rounded-2xl transition-all duration-300"
         >
           <div className="h-12 w-12 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold mb-4 group-hover:scale-110 transition-transform">
