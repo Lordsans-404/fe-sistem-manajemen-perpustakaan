@@ -2,15 +2,35 @@ import { useEffect, useRef, useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import { Navbar } from '@/components/layout/Navbar'
 import { Sidebar } from '@/components/layout/Sidebar'
+import { ToastContainer } from '@/components/common/ToastContainer'
 import { useMe } from '@/hooks/useMe'
 import { Spinner } from '@/components/common/Spinner'
 import { useAuthStore } from '@/store/authStore'
+import { useBorrows } from '@/hooks/useTransactions'
+import {
+  useBorrowNotifications,
+  useFineNotifications,
+  useStaffNotifications,
+  useDueDateReminders,
+} from '@/hooks/useRealtimeNotifications'
 
 export function DefaultLayout() {
   const { isLoading, error } = useMe()
   const logout = useAuthStore((s) => s.logout)
 
   const user = useAuthStore((s) => s.user)
+  const isMember = !!user?.member_profile
+  const isStaff = !!user?.staff_profile
+
+  // Realtime Notifications
+  useBorrowNotifications(user?.member_profile?.id)
+  useFineNotifications(user?.member_profile?.id)
+  useStaffNotifications(isStaff)
+
+  // Due Date Reminders (Only fetch if member)
+  const { data: activeBorrows } = useBorrows({ status: 'active' }, isMember)
+  useDueDateReminders(isMember ? activeBorrows?.results || [] : [])
+
   const hasAlertedRef = useRef(false)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
@@ -53,6 +73,7 @@ export function DefaultLayout() {
   return (
     <div className="min-h-screen bg-neutral-950 text-neutral-100 flex flex-col">
       <Navbar onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)} />
+      <ToastContainer />
       <div className="flex flex-1 overflow-hidden relative">
         <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 

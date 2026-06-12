@@ -12,10 +12,11 @@ export const transactionKeys = {
 }
 
 // Borrows
-export function useBorrows(params?: Record<string, unknown>) {
+export function useBorrows(params?: Record<string, unknown>, enabled = true) {
   return useQuery({
     queryKey: transactionKeys.borrowsList(params),
     queryFn: () => transactionService.getAllBorrows(params).then((res) => res.data.data),
+    enabled,
   })
 }
 
@@ -70,10 +71,11 @@ export function useRejectBorrow() {
 }
 
 // Fines
-export function useFines(params?: Record<string, unknown>) {
+export function useFines(params?: Record<string, unknown>, enabled = true) {
   return useQuery({
     queryKey: transactionKeys.finesList(params),
     queryFn: () => transactionService.getAllFines(params).then((res) => res.data.data),
+    enabled,
   })
 }
 

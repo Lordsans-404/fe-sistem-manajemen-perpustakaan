@@ -1,73 +1,66 @@
-# React + TypeScript + Vite
+# Nebula Digital Library - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, fast, and feature-rich Single Page Application (SPA) for the Nebula Library Management System. Built with React 19, TypeScript, and Vite, this frontend seamlessly integrates with a Django backend and utilizes Supabase Realtime for instant user notifications.
 
-Currently, two official plugins are available:
+## 🚀 Live Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+The following core features are fully implemented and working normally:
 
-## React Compiler
+### 1. Authentication & Security
+- **JWT-Based Authentication**: Secure login and registration flows.
+- **Dynamic Error Handling**: Deeply nested validation errors from Django are cleanly parsed and displayed on the UI.
+- **Protected Routes**: Unauthenticated users are redirected to login, and access to specific pages is guarded by role permissions.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 2. Role-Based Access Control (RBAC)
+The UI dynamically adapts based on the user's role profile (`Member`, `Librarian`, `Supervisor`, `Admin`):
+- **Admins**: Full access to all modules, including adding/editing/deleting Library branches.
+- **Supervisors**: Can edit or delete Library branches.
+- **Librarians**: Can manage book transactions and catalogs but cannot modify infrastructure data.
+- **Members**: Can only access the public catalog, their own borrowing history, and personal fines.
 
-## Expanding the ESLint configuration
+### 3. Member Portal
+- **Book Catalog**: Browse available books and request to borrow them.
+- **Transaction Dashboard**: Track pending requests, active borrowings, and return history.
+- **Fines Management**: View active and historical fines for late returns, lost, or damaged books.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 4. Staff Management Dashboard
+- **Circulation Management**: Approve or reject pending borrow requests from members.
+- **Fine Issuance**: Manually issue fines for damaged or lost books with a dedicated UI.
+- **Branch Management**: (Admin/Supervisor only) Add and manage library branch locations.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### 5. Advanced Real-Time Notifications
+Powered by **Supabase Realtime PostgreSQL Replication** and custom frontend hooks, the app delivers instant updates via In-App Toasts and OS Desktop Notifications:
+- **Instant Borrow Updates**: Members are instantly notified when staff approve or reject their borrow request.
+- **Instant Fine Alerts**: Members receive immediate alerts if a staff member issues a fine against them.
+- **Staff Alerts**: Staff members are instantly notified when a new borrow request arrives.
+- **Automated Due Date Reminders**: An intelligent frontend-only mechanism calculates days left on active borrows and triggers a reminder Toast 3 days and 1 day before the due date. To prevent spam, this alert is locally throttled to show only once every 6 hours.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## 🛠 Tech Stack
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- **Framework**: React 19 + TypeScript
+- **Build Tool**: Vite 8
+- **Styling**: Tailwind CSS v4
+- **Routing**: React Router v7
+- **Server State / Data Fetching**: TanStack Query v5 + Axios
+- **Client State**: Zustand v5
+- **Real-Time Engine**: `@supabase/supabase-js`
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## ⚙️ Development Setup
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1. **Install dependencies:**
+   ```bash
+   bun install
+   ```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+2. **Environment Variables:**
+   Create a `.env.local` file in the root directory and configure the following:
+   ```env
+   VITE_API_BASE_URL=http://localhost:8000/api/v1
+   VITE_SUPABASE_URL=https://your-project.supabase.co
+   VITE_SUPABASE_ANON_KEY=your-anon-key
+   ```
+
+3. **Run the development server:**
+   ```bash
+   bun run dev
+   ```
