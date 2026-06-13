@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import { useNavigate, Link, Navigate } from 'react-router-dom'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { authService } from '@/services/auth.service'
 import { useAuthStore } from '@/store/authStore'
 import { cn } from '@/utils/cn'
 
 export function LoginPage() {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
   const setAuth = useAuthStore((s) => s.setAuth)
 
@@ -17,6 +18,7 @@ export function LoginPage() {
   const loginMutation = useMutation({
     mutationFn: authService.login,
     onSuccess: (data) => {
+      queryClient.clear()
       setAuth(data.data.access_token, null)
       navigate('/app', { replace: true })
     },

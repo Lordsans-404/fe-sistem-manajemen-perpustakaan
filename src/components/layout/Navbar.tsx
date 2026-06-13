@@ -2,6 +2,8 @@ import { useAuthStore } from '@/store/authStore'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/common/Button'
 
+import { useQueryClient } from '@tanstack/react-query'
+
 interface NavbarProps {
   onMenuClick?: () => void
 }
@@ -10,8 +12,10 @@ export function Navbar({ onMenuClick }: NavbarProps) {
   const user = useAuthStore((s) => s.user)
   const logout = useAuthStore((s) => s.logout)
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
 
   const handleLogout = () => {
+    queryClient.clear()
     logout()
     navigate('/auth/login')
   }

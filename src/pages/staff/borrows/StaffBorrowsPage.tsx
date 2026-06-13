@@ -10,10 +10,17 @@ import { Pagination } from '@/components/common/Pagination'
 import { cn } from '@/utils/cn'
 import type { BorrowSummary } from '@/types/transaction.types'
 
+const STATUSES = [
+  { key: 'pending', label: 'Pending', color: 'bg-amber-500', shadow: 'shadow-amber-500/50' },
+  { key: 'active', label: 'Aktif', color: 'bg-emerald-500', shadow: 'shadow-emerald-500/50' },
+  { key: 'returned', label: 'Selesai', color: 'bg-blue-500', shadow: 'shadow-blue-500/50' },
+  { key: 'failed', label: 'Ditolak', color: 'bg-orange-600', shadow: 'shadow-orange-600/50' },
+] as const
+
 export function StaffBorrowsPage() {
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
-  const [statusFilter, setStatusFilter] = useState<'active' | 'returned' | 'overdue' | 'pending' | 'failed' | 'all'>('all')
+  const [statusFilter, setStatusFilter] = useState<'active' | 'returned' | 'pending' | 'failed' | 'all'>('all')
   const debouncedSearch = useDebounce(search, 500)
 
   const { data, isLoading } = useBorrows({
@@ -105,48 +112,16 @@ export function StaffBorrowsPage() {
 
   return (
     <div className="space-y-6 text-left">
-      <div>
-        <h1 className="text-2xl font-bold text-white tracking-tight">Peminjaman & Pengembalian</h1>
-        <p className="text-sm text-neutral-400">
-          Kelola transaksi sirkulasi buku. Proses pengembalian dan pantau buku overdue.
-        </p>
-      </div>
-
-      {/* Filters and Search */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        {/* Status Filter Tabs */}
-        <div className="flex bg-neutral-950 p-1 rounded-xl border border-neutral-850 overflow-x-auto max-w-full">
-          {(['all', 'pending', 'active', 'overdue', 'returned', 'failed'] as const).map((status) => (
-            <button
-              key={status}
-              onClick={() => {
-                setStatusFilter(status)
-                setPage(1)
-              }}
-              className={cn(
-                'px-3.5 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap',
-                statusFilter === status
-                  ? 'bg-neutral-800 text-white shadow-sm'
-                  : 'text-neutral-400 hover:text-white'
-              )}
-            >
-              {status === 'all' 
-                ? 'Semua' 
-                : status === 'pending' 
-                  ? 'Pending' 
-                  : status === 'active' 
-                    ? 'Aktif' 
-                    : status === 'overdue' 
-                      ? 'Terlambat' 
-                      : status === 'returned' 
-                        ? 'Selesai' 
-                        : 'Ditolak'}
-            </button>
-          ))}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-white tracking-tight">Peminjaman & Pengembalian</h1>
+          <p className="text-sm text-neutral-400 mt-1">
+            Kelola transaksi sirkulasi buku. Proses pengembalian dan pantau buku overdue.
+          </p>
         </div>
-
+        
         {/* Search Bar */}
-        <div className="w-full sm:w-80">
+        <div className="w-full md:w-80">
           <Input
             type="text"
             placeholder="Cari member, judul buku..."
@@ -155,8 +130,80 @@ export function StaffBorrowsPage() {
               setSearch(e.target.value)
               setPage(1)
             }}
-            className="py-2"
+            className="py-2.5 bg-neutral-900 border-neutral-800 focus:border-indigo-500/50"
           />
+        </div>
+      </div>
+
+      {/* Stepper Filter */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <span className="text-xs font-bold uppercase tracking-wider text-neutral-400">Status Transaksi</span>
+          <button
+            onClick={() => {
+              setStatusFilter('all')
+              setPage(1)
+            }}
+            className={cn(
+              'px-4 py-1.5 rounded-xl text-xs font-bold transition-all duration-300 border cursor-pointer',
+              statusFilter === 'all'
+                ? 'bg-indigo-600/10 border-indigo-500/30 text-indigo-400 shadow-[0_0_15px_-3px_rgba(99,102,241,0.2)]'
+                : 'bg-neutral-900 border-neutral-800 text-neutral-400 hover:text-neutral-200'
+            )}
+          >
+            Semua Transaksi
+          </button>
+        </div>
+
+        <div className="p-8 bg-neutral-900 rounded-3xl border border-neutral-800/80">
+          <div className="relative flex items-center justify-between w-full z-10">
+            {/* Inactive connecting line */}
+            <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-0.5 bg-neutral-800 -z-10" />
+            
+            {/* Active connecting line */}
+            <div 
+              className={cn(
+                "absolute left-0 top-1/2 -translate-y-1/2 h-0.5 bg-neutral-700 -z-10 transition-all duration-500",
+                statusFilter === 'all' ? "right-0 opacity-100" : "right-full opacity-0"
+              )}
+            />
+
+            {STATUSES.map((status) => {
+              const isSelected = statusFilter === status.key || statusFilter === 'all'
+              
+              return (
+                <button
+                  key={status.key}
+                  onClick={() => {
+                    setStatusFilter(status.key)
+                    setPage(1)
+                  }}
+                  className="relative flex flex-col items-center group cursor-pointer outline-none"
+                >
+                  <div 
+                    className={cn(
+                      "w-4 h-4 rounded-full transition-all duration-300 ring-8 ring-neutral-900",
+                      isSelected 
+                        ? `${status.color} shadow-lg ${status.shadow}`
+                        : "bg-neutral-700 group-hover:bg-neutral-500"
+                    )}
+                  />
+                  <div className="absolute top-8">
+                    <span 
+                      className={cn(
+                        "text-xs font-semibold tracking-wide transition-colors duration-200 whitespace-nowrap",
+                        isSelected ? "text-white" : "text-neutral-500 group-hover:text-neutral-400"
+                      )}
+                    >
+                      {status.label}
+                    </span>
+                  </div>
+                </button>
+              )
+            })}
+          </div>
+          {/* Spacer for absolute label */}
+          <div className="h-4" />
         </div>
       </div>
 
@@ -189,7 +236,7 @@ export function StaffBorrowsPage() {
                     <tr key={borrow.id} className="hover:bg-neutral-850/30 transition-colors">
                       <td className="px-6 py-4">
                         <div className="font-semibold text-white">{borrow.book_title}</div>
-                        <div className="text-xs text-neutral-500 font-mono mt-0.5">{borrow.id}</div>
+                        <div className="text-xs text-neutral-500 font-mono mt-0.5" title={borrow.id}>#{borrow.id.slice(0, 8)}</div>
                       </td>
                       <td className="px-6 py-4 font-semibold text-white">
                         {borrow.member_name}
