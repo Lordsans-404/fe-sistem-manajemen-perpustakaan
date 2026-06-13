@@ -11,7 +11,7 @@ export interface BorrowSummary {
   return_date: string | null
   is_overdue: boolean
   overdue_days: number
-  status: 'pending' | 'active' | 'failed' | string
+  status: 'pending' | 'active' | 'returned' | 'failed'
 }
 
 export interface BorrowDetail {
@@ -24,7 +24,7 @@ export interface BorrowDetail {
   return_date: string | null
   is_overdue: boolean
   overdue_days: number
-  status: 'pending' | 'active' | 'failed' | string
+  status: 'pending' | 'active' | 'returned' | 'failed'
   created_at: string
   updated_at: string
 }
@@ -38,6 +38,10 @@ export interface CreateBorrowDto {
 
 export interface ReturnBookDto {
   return_date: string
+}
+
+export interface UpdateBorrowStatusDto {
+  status: 'pending' | 'active' | 'returned' | 'failed'
 }
 
 export type FineType = 'overdue' | 'damage' | 'loss' | 'other'

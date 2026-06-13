@@ -203,6 +203,7 @@ export function BookDetailPage() {
                 <thead>
                   <tr className="bg-neutral-950/40 border-b border-neutral-800 text-neutral-400 font-semibold">
                     <th className="px-6 py-4">Cabang & Lokasi</th>
+                    <th className="px-6 py-4">ID Salinan</th>
                     <th className="px-6 py-4">ISBN</th>
                     <th className="px-6 py-4">Penerbit / Tahun</th>
                     <th className="px-6 py-4">Kondisi</th>
@@ -215,6 +216,9 @@ export function BookDetailPage() {
                       <td className="px-6 py-4">
                         <div className="font-semibold text-white">{copy.library.name}</div>
                         <div className="text-xs text-neutral-500">{copy.library.code}</div>
+                      </td>
+                      <td className="px-6 py-4 font-mono text-xs text-neutral-400">
+                        <span title={copy.id}>{copy.id.substring(0, 8)}...</span>
                       </td>
                       <td className="px-6 py-4 font-mono text-xs text-neutral-400">
                         {copy.isbn || '-'}

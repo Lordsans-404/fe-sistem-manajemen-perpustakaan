@@ -12,7 +12,7 @@ import type { Fine, FineType } from '@/types/transaction.types'
 
 export function StaffFinesPage() {
   const user = useAuthStore((s) => s.user)
-  const isAuthorizedToWaive =
+  const isAdmin =
     user?.staff_profile?.role === 'admin' || user?.staff_profile?.role === 'supervisor'
 
   const [activeTab, setActiveTab] = useState<'unpaid' | 'history'>('unpaid')
@@ -42,8 +42,12 @@ export function StaffFinesPage() {
   const createFineMutation = useCreateFine()
 
   // Fetch borrows for manual fine dropdown
-  const { data: borrowsData } = useBorrows({ page_size: 100 })
+  const { data: borrowsData } = useBorrows({ page_size: 200 })
   const borrowsList = borrowsData?.results ?? []
+
+  const activeBorrows = borrowsList.filter((b) => b.status === 'active')
+  const returnedBorrows = borrowsList.filter((b) => b.status === 'returned')
+  const validBorrowsForFine = [...activeBorrows, ...returnedBorrows]
 
   // Modals state
   const [payingFine, setPayingFine] = useState<Fine | null>(null)
@@ -119,7 +123,7 @@ export function StaffFinesPage() {
   }
 
   const handleOpenCreateModal = () => {
-    setBorrowTransactionId(borrowsList[0]?.id ?? '')
+    setBorrowTransactionId(validBorrowsForFine[0]?.id ?? '')
     setFineType('damage')
     setAmount('')
     setDescription('')
@@ -282,10 +286,12 @@ export function StaffFinesPage() {
                           {fine.borrow_transaction.book_title}
                         </div>
                         <div className="text-xs text-neutral-400 mt-0.5">
-                          Member: <span className="font-medium text-neutral-300">{fine.borrow_transaction.member_name}</span>
+                          Oleh: <span className="font-medium text-neutral-300">{fine.borrow_transaction.member_name}</span>
                         </div>
-                        <div className="text-[10px] text-neutral-500 font-mono mt-0.5">
-                          ID: {fine.id}
+                        <div className="text-[10px] text-neutral-500 mt-1.5 flex gap-2">
+                          <span>📅 {new Date(fine.borrow_transaction.borrow_date).toLocaleDateString('id-ID')}</span>
+                          <span className="text-neutral-600">|</span>
+                          <span className="font-mono" title={`Trx: ${fine.borrow_transaction.id}`}>Trx: {fine.borrow_transaction.id.substring(0, 8)}</span>
                         </div>
                       </td>
                       <td className="px-6 py-4 text-xs font-semibold">
@@ -310,15 +316,13 @@ export function StaffFinesPage() {
                             >
                               Bayar
                             </Button>
-                            {isAuthorizedToWaive && (
-                              <Button
-                                variant="secondary"
-                                className="py-1 px-3 text-xs text-red-400 hover:text-red-350"
-                                onClick={() => handleWaiveClick(fine)}
-                              >
-                                Waive
-                              </Button>
-                            )}
+                            <Button
+                              variant="secondary"
+                              className={['py-1 px-3 text-xs', isAdmin ? 'text-red-400 hover:text-red-300' : 'text-orange-400 hover:text-orange-300'].join(' ')}
+                              onClick={() => handleWaiveClick(fine)}
+                            >
+                              Waive
+                            </Button>
                           </div>
                         )}
                       </td>
@@ -468,11 +472,24 @@ export function StaffFinesPage() {
               className="w-full bg-neutral-950 border border-neutral-850 hover:border-neutral-800 text-neutral-200 focus:border-indigo-500 rounded-xl px-4 py-3 text-sm focus:outline-none transition-colors duration-200 cursor-pointer"
             >
               <option value="" disabled>-- Pilih Transaksi --</option>
-              {borrowsList.map((borrow) => (
-                <option key={borrow.id} value={borrow.id}>
-                  {borrow.book_title} - {borrow.member_name} ({borrow.borrow_date})
-                </option>
-              ))}
+              {activeBorrows.length > 0 && (
+                <optgroup label="Peminjaman Aktif">
+                  {activeBorrows.map((borrow) => (
+                    <option key={borrow.id} value={borrow.id}>
+                      {borrow.book_title} - {borrow.member_name} (Pinjam: {borrow.borrow_date})
+                    </option>
+                  ))}
+                </optgroup>
+              )}
+              {returnedBorrows.length > 0 && (
+                <optgroup label="Selesai (Dikembalikan)">
+                  {returnedBorrows.map((borrow) => (
+                    <option key={borrow.id} value={borrow.id}>
+                      {borrow.book_title} - {borrow.member_name} (Pinjam: {borrow.borrow_date})
+                    </option>
+                  ))}
+                </optgroup>
+              )}
             </select>
           </div>
 

@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { transactionService } from '@/services/transaction.service'
-import type { CreateBorrowDto, ReturnBookDto, CreateFineDto, PayFineDto } from '@/types/transaction.types'
+import type { CreateBorrowDto, ReturnBookDto, UpdateBorrowStatusDto, CreateFineDto, PayFineDto } from '@/types/transaction.types'
 
 export const transactionKeys = {
   borrowsAll: ['borrows'] as const,
@@ -64,6 +64,17 @@ export function useRejectBorrow() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (id: string) => transactionService.rejectBorrow(id).then((res) => res.data.data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: transactionKeys.borrowsAll })
+    },
+  })
+}
+
+export function useUpdateBorrowStatus() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: UpdateBorrowStatusDto }) =>
+      transactionService.updateBorrowStatus(id, data).then((res) => res.data.data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: transactionKeys.borrowsAll })
     },

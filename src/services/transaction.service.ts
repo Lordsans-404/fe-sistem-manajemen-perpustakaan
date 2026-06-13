@@ -4,6 +4,7 @@ import type {
   BorrowDetail,
   CreateBorrowDto,
   ReturnBookDto,
+  UpdateBorrowStatusDto,
   Fine,
   CreateFineDto,
   PayFineDto,
@@ -29,6 +30,9 @@ export const transactionService = {
 
   rejectBorrow: (id: string) =>
     api.post<BaseResponse<BorrowDetail>>(`/api/v1/transactions/borrows/${id}/reject/`),
+
+  updateBorrowStatus: (id: string, data: UpdateBorrowStatusDto) =>
+    api.patch<BaseResponse<BorrowDetail>>(`/api/v1/transactions/borrows/${id}/`, data),
 
   // Fines
   getAllFines: (params?: Record<string, unknown>) =>
