@@ -107,7 +107,7 @@ export function HomePage() {
             <h1 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight">
               Halo, {user?.name}!
             </h1>
-            <p className="text-indigo-200/80 max-w-xl text-sm md:text-base">
+            <p className="text-indigo-200/80 max-w-[36rem] text-sm md:text-base">
               Selamat bekerja. Anda login sebagai <span className="font-semibold text-white">{roleName}</span> di <span className="font-semibold text-white">{user?.staff_profile?.library.name}</span>.
             </p>
           </div>
@@ -347,7 +347,7 @@ export function HomePage() {
           <h1 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight">
             Selamat Datang, {user?.name}!
           </h1>
-          <p className="text-neutral-400 max-w-xl text-sm md:text-base leading-relaxed">
+          <p className="text-neutral-400 max-w-[36rem] text-sm md:text-base leading-relaxed">
             Temukan ribuan referensi buku ilmiah, novel populer, dan jurnal riset dalam genggaman Anda.
           </p>
           <div className="pt-2">

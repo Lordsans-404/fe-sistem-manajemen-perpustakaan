@@ -52,11 +52,12 @@ export function BooksPage() {
         </div>
       ) : books.length === 0 ? (
         <div className="py-24 text-center border border-dashed border-neutral-800 rounded-2xl bg-neutral-900/20">
-          <div className="text-3xl mb-3">🔍</div>
-          <h3 className="text-sm font-semibold text-white">Tidak Ada Buku Ditemukan</h3>
-          <p className="text-xs text-neutral-500 mt-1 max-w-xs mx-auto">
-            Coba gunakan kata kunci pencarian lain atau periksa ejaan Anda.
+          <div className="text-center py-12">
+          <p className="text-neutral-400">Tidak ada buku yang sesuai dengan pencarian atau filter.</p>
+          <p className="text-xs text-neutral-500 mt-1 max-w-[20rem] mx-auto">
+            Coba gunakan kata kunci lain atau ubah kategori filter Anda.
           </p>
+          </div>
         </div>
       ) : (
         <>

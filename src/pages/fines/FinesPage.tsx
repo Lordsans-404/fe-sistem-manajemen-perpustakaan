@@ -149,7 +149,7 @@ export function FinesPage() {
                       <td className="px-6 py-4 text-xs font-semibold">
                         {getFineTypeLabel(fine.fine_type)}
                       </td>
-                      <td className="px-6 py-4 text-xs text-neutral-400 max-w-xs truncate">
+                      <td className="px-6 py-4 text-xs text-neutral-400 max-w-[20rem] truncate">
                         {fine.description || '-'}
                       </td>
                       <td className="px-6 py-4 font-semibold text-white">
