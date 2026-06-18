@@ -24,11 +24,36 @@ export function LoginPage() {
     },
     onError: (err: unknown) => {
       // safe narrowing for error type
-      const error = err as { response?: { data?: { message?: string } } }
-      setErrorMsg(
-        error.response?.data?.message ||
-          'Gagal masuk. Silakan periksa kembali email dan password Anda.'
-      )
+      const error = err as { response?: { data?: { message?: string, detail?: string, error?: string } } }
+
+      if (!error.response) {
+        setErrorMsg('Koneksi bermasalah atau server lambat merespon. Silakan periksa internet Anda atau coba lagi nanti.')
+        return
+      }
+      
+      const data = error.response?.data
+      
+      if (data?.message || data?.detail || data?.error) {
+        setErrorMsg(data.message || data.detail || data.error || 'Gagal masuk.')
+        return
+      }
+
+      if (data && typeof data === 'object') {
+        const errorStrings: string[] = []
+        for (const [key, value] of Object.entries(data)) {
+          if (typeof value === 'string') {
+            errorStrings.push(`${key}: ${value}`)
+          } else if (Array.isArray(value)) {
+            errorStrings.push(`${key}: ${(value as string[]).join(', ')}`)
+          }
+        }
+        if (errorStrings.length > 0) {
+          setErrorMsg(errorStrings.join('\n'))
+          return
+        }
+      }
+
+      setErrorMsg('Gagal masuk. Silakan periksa kembali email dan password Anda.')
     },
   })
 

@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import type { User } from '@/types/auth.types'
+import { supabase } from '@/utils/supabaseClient'
 
 interface AuthState {
   user: User | null
@@ -25,6 +26,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   logout: () => {
+    supabase.auth.signOut()
     localStorage.removeItem('access_token')
     set({ token: null, user: null, isAuthenticated: false })
   },

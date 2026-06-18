@@ -30,32 +30,55 @@ export function RegisterPage() {
         response?: {
           data?: {
             message?: string
+            detail?: string
+            error?: string
             errors?: Record<string, string[] | string>
           }
         }
       }
+      
+      if (!error.response) {
+        setErrorMsg('Koneksi bermasalah atau server lambat merespon. Silakan periksa internet Anda atau coba lagi nanti.')
+        return
+      }
+
       const data = error.response?.data
+      
+      // Handle nested "errors" object if it exists
       if (data?.errors && typeof data.errors === 'object') {
         const fieldErrors = Object.entries(data.errors)
           .map(([field, msgs]) => {
-            const fieldName =
-              field === 'phone_number'
-                ? 'Nomor Telepon'
-                : field === 'email'
-                ? 'Email'
-                : field === 'password'
-                ? 'Password'
-                : field === 'name'
-                ? 'Nama'
-                : field
             const msgList = Array.isArray(msgs) ? msgs.join(', ') : String(msgs)
-            return `${fieldName}: ${msgList}`
+            return `${field}: ${msgList}`
           })
           .join('\n')
-        setErrorMsg(fieldErrors || data.message || 'Gagal mendaftar.')
-      } else {
-        setErrorMsg(data?.message || 'Gagal mendaftar. Silakan coba lagi.')
+        setErrorMsg(fieldErrors || data.message || data.detail || data.error || 'Gagal mendaftar.')
+        return
       }
+      
+      // If we have explicit string messages at root
+      if (data?.message || data?.detail || data?.error) {
+        setErrorMsg(data.message || data.detail || data.error || 'Gagal mendaftar.')
+        return
+      }
+
+      // DRF often returns errors directly at the root object: {"email": ["Email already exists"]}
+      if (data && typeof data === 'object') {
+        const errorStrings: string[] = []
+        for (const [key, value] of Object.entries(data)) {
+          if (typeof value === 'string') {
+            errorStrings.push(`${key}: ${value}`)
+          } else if (Array.isArray(value)) {
+            errorStrings.push(`${key}: ${(value as string[]).join(', ')}`)
+          }
+        }
+        if (errorStrings.length > 0) {
+          setErrorMsg(errorStrings.join('\n'))
+          return
+        }
+      }
+
+      setErrorMsg('Gagal mendaftar. Silakan coba lagi.')
     },
   })
 
