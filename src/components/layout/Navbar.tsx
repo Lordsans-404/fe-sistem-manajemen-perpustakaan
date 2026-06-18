@@ -14,9 +14,9 @@ export function Navbar({ onMenuClick }: NavbarProps) {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     queryClient.clear()
-    logout()
+    await logout()
     navigate('/auth/login')
   }
 

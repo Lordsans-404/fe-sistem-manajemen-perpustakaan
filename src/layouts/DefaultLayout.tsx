@@ -47,7 +47,7 @@ export function DefaultLayout() {
       } else {
         alert(`Gagal memuat data pengguna (Error ${status || 'Unknown'}): ${detail}`)
       }
-      logout()
+      void logout()
     } else if (!isLoading && user) {
       // Check if user has no profile at all
       if (!user.member_profile && !user.staff_profile && !hasAlertedRef.current) {

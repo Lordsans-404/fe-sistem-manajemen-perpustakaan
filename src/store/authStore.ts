@@ -8,7 +8,7 @@ interface AuthState {
   isAuthenticated: boolean
   setAuth: (token: string, user: User | null) => void
   setUser: (user: User) => void
-  logout: () => void
+  logout: () => Promise<void>
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -25,8 +25,8 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ user })
   },
 
-  logout: () => {
-    supabase.auth.signOut()
+  logout: async () => {
+    await supabase.auth.signOut()
     localStorage.removeItem('access_token')
     set({ token: null, user: null, isAuthenticated: false })
   },
