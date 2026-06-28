@@ -135,6 +135,28 @@ export function useUpdateStaff() {
   })
 }
 
+export function useDeactivateUser() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (id: string) => userService.deactivateUser(id).then((res) => res.data.data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: userKeys.staffsAll })
+      queryClient.invalidateQueries({ queryKey: userKeys.membersAll })
+    },
+  })
+}
+
+export function useActivateUser() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (id: string) => userService.activateUser(id).then((res) => res.data.data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: userKeys.staffsAll })
+      queryClient.invalidateQueries({ queryKey: userKeys.membersAll })
+    },
+  })
+}
+
 // Library CRUD Mutations
 export function useCreateLibrary() {
   const queryClient = useQueryClient()

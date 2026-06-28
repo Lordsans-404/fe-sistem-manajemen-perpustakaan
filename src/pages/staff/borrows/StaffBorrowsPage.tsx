@@ -23,11 +23,19 @@ export function StaffBorrowsPage() {
   const [statusFilter, setStatusFilter] = useState<'active' | 'returned' | 'pending' | 'failed' | 'all'>('all')
   const debouncedSearch = useDebounce(search, 500)
 
+  const isUUID = (str: string) => /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(str)
+  
+  const searchParam = debouncedSearch
+    ? isUUID(debouncedSearch)
+      ? { member_id: debouncedSearch }
+      : { member_name: debouncedSearch }
+    : {}
+
   const { data, isLoading } = useBorrows({
     page,
     page_size: 10,
-    search: debouncedSearch || undefined,
     status: statusFilter === 'all' ? undefined : statusFilter,
+    ...searchParam,
   })
 
   const borrows = data?.results ?? []
@@ -124,7 +132,7 @@ export function StaffBorrowsPage() {
         <div className="w-full md:w-80">
           <Input
             type="text"
-            placeholder="Cari member, judul buku..."
+            placeholder="Cari nama member atau ID..."
             value={search}
             onChange={(e) => {
               setSearch(e.target.value)
@@ -142,6 +150,7 @@ export function StaffBorrowsPage() {
           <button
             onClick={() => {
               setStatusFilter('all')
+              setSearch('')
               setPage(1)
             }}
             className={cn(

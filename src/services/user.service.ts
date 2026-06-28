@@ -10,6 +10,12 @@ export const userService = {
   updateMe: (data: { name?: string; phone_number?: string | null }) =>
     api.patch<BaseResponse<User>>('/api/v1/users/me/', data),
 
+  deactivateUser: (id: string) =>
+    api.patch<BaseResponse<User>>(`/api/v1/users/${id}/deactivate/`),
+
+  activateUser: (id: string) =>
+    api.patch<BaseResponse<User>>(`/api/v1/users/${id}/activate/`),
+
   // Libraries
   getAllLibraries: (params?: Record<string, unknown>) =>
     api.get<BaseResponse<PaginatedResponse<Library>>>('/api/v1/users/libraries/', { params }),

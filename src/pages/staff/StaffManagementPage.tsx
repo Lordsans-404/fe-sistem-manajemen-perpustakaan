@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { useStaffs, useCreateStaff, useUpdateStaff, useLibraries } from '@/hooks/useMe'
+import { useStaffs, useCreateStaff, useUpdateStaff, useLibraries, useDeactivateUser, useActivateUser } from '@/hooks/useMe'
 import { useAuthStore } from '@/store/authStore'
 import { Button } from '@/components/common/Button'
 import { Input } from '@/components/common/Input'
 import { Spinner } from '@/components/common/Spinner'
 import { Modal } from '@/components/common/Modal'
+import { Badge } from '@/components/common/Badge'
 import { Pagination } from '@/components/common/Pagination'
 import type { Staff } from '@/types/auth.types'
 
@@ -30,6 +31,8 @@ export function StaffManagementPage() {
   // Mutations
   const createMutation = useCreateStaff()
   const updateMutation = useUpdateStaff()
+  const deactivateMutation = useDeactivateUser()
+  const activateMutation = useActivateUser()
 
   // Modal states
   const [isFormModalOpen, setIsFormModalOpen] = useState(false)
@@ -139,6 +142,18 @@ export function StaffManagementPage() {
     return map[r] || r
   }
 
+  const handleDeactivate = (staff: Staff) => {
+    if (window.confirm(`Yakin ingin menonaktifkan akun staff ${staff.user.name}?`)) {
+      deactivateMutation.mutate(staff.user.id)
+    }
+  }
+
+  const handleActivate = (staff: Staff) => {
+    if (window.confirm(`Yakin ingin mengaktifkan akun staff ${staff.user.name}?`)) {
+      activateMutation.mutate(staff.user.id)
+    }
+  }
+
   const isPending = createMutation.isPending || updateMutation.isPending
 
   return (
@@ -178,9 +193,12 @@ export function StaffManagementPage() {
                 </thead>
                 <tbody className="divide-y divide-neutral-800 text-neutral-300">
                   {staffs.map((st) => (
-                    <tr key={st.id} className="hover:bg-neutral-850/30 transition-colors">
+                    <tr key={st.id} className={`transition-colors ${!st.user.is_active ? 'bg-red-950/10 opacity-75' : 'hover:bg-neutral-850/30'}`}>
                       <td className="px-6 py-4">
-                        <div className="font-semibold text-white">{st.user.name}</div>
+                        <div className="flex items-center gap-2 mb-0.5">
+                          <div className="font-semibold text-white">{st.user.name}</div>
+                          {!st.user.is_active && <Badge variant="danger">Nonaktif</Badge>}
+                        </div>
                         <div className="text-xs text-neutral-500">{st.user.email}</div>
                       </td>
                       <td className="px-6 py-4">
@@ -191,13 +209,34 @@ export function StaffManagementPage() {
                         {getRoleLabel(st.role)}
                       </td>
                       <td className="px-6 py-4 text-right">
-                        <Button
-                          variant="secondary"
-                          className="py-1 px-3 text-xs"
-                          onClick={() => handleOpenEditModal(st)}
-                        >
-                          Edit
-                        </Button>
+                        <div className="flex justify-end gap-2">
+                          <Button
+                            variant="secondary"
+                            className="py-1 px-3 text-xs"
+                            onClick={() => handleOpenEditModal(st)}
+                          >
+                            Edit
+                          </Button>
+                          {st.user.is_active ? (
+                            <Button
+                              variant="secondary"
+                              className="py-1 px-3 text-xs text-orange-400 hover:text-orange-300 border-orange-900/50"
+                              onClick={() => handleDeactivate(st)}
+                              isLoading={deactivateMutation.isPending}
+                            >
+                              Nonaktifkan
+                            </Button>
+                          ) : (
+                            <Button
+                              variant="secondary"
+                              className="py-1 px-3 text-xs text-emerald-400 hover:text-emerald-300 border-emerald-900/50"
+                              onClick={() => handleActivate(st)}
+                              isLoading={activateMutation.isPending}
+                            >
+                              Aktifkan
+                            </Button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))}
