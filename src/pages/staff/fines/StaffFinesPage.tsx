@@ -206,7 +206,7 @@ export function StaffFinesPage() {
   const isCreatePending = createFineMutation.isPending
 
   return (
-    <div className="space-y-6 text-left max-w-5xl mx-auto">
+    <div className="space-y-6 text-left">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-white tracking-tight">Kasir Denda</h1>

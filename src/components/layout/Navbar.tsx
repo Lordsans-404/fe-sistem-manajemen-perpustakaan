@@ -39,7 +39,7 @@ export function Navbar({ onMenuClick }: NavbarProps) {
     <nav className="sticky top-0 z-40 bg-neutral-950/80 backdrop-blur-md border-b border-neutral-800/80 py-4 px-4 md:px-6 flex justify-between items-center">
       <div className="flex items-center gap-3">
         {onMenuClick && (
-          <button 
+          <button
             onClick={onMenuClick}
             className="md:hidden p-2 -ml-2 text-neutral-400 hover:text-white transition-colors"
             aria-label="Toggle Menu"
@@ -53,7 +53,7 @@ export function Navbar({ onMenuClick }: NavbarProps) {
           P
         </div>
         <span className="text-base md:text-lg font-bold text-white tracking-tight hidden sm:block">
-          Perpustakaan Digital
+          Perpustakaan Kampus
         </span>
       </div>
 

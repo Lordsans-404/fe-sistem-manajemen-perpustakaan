@@ -10,6 +10,7 @@ interface SidebarProps {
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const user = useAuthStore((s) => s.user)
   const isStaff = !!user?.staff_profile
+  const role = user?.staff_profile?.role
 
   const memberMenu = [
     { to: '/app', label: 'Beranda' },
@@ -25,7 +26,10 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
     { to: '/app/staff/borrows', label: 'Peminjaman Member' },
     { to: '/app/staff/fines', label: 'Kasir Denda' },
     { to: '/app/staff/members', label: 'Verifikasi & Member' },
-    { to: '/app/staff/libraries', label: 'Cabang Perpustakaan' },
+    {
+      to: '/app/staff/libraries',
+      label: role === 'admin' ? 'Cabang Perpustakaan' : 'Profil Saya',
+    },
   ]
 
   if (user?.staff_profile && ['admin', 'supervisor'].includes(user.staff_profile.role)) {

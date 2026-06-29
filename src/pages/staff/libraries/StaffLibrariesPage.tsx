@@ -35,7 +35,7 @@ export function StaffLibrariesPage() {
   
   const [name, setName] = useState('')
   const [code, setCode] = useState('')
-  const [type, setType] = useState('branch')
+  const [type, setType] = useState('central')
 
   const [deletingLibrary, setDeletingLibrary] = useState<Library | null>(null)
 
@@ -46,7 +46,7 @@ export function StaffLibrariesPage() {
     setEditingLibrary(null)
     setName('')
     setCode('')
-    setType('branch')
+    setType('central')
     setErrorMsg('')
     setSuccessMsg('')
     setIsFormModalOpen(true)
@@ -131,9 +131,8 @@ export function StaffLibrariesPage() {
 
   const getLibraryTypeLabel = (t: string) => {
     const map: Record<string, string> = {
-      main: 'Perpustakaan Pusat',
-      branch: 'Perpustakaan Cabang',
-      digital: 'Layanan Digital',
+      central: 'Perpustakaan Pusat (Central)',
+      faculty: 'Perpustakaan Fakultas (Faculty)',
     }
     return map[t] || t
   }
@@ -141,7 +140,7 @@ export function StaffLibrariesPage() {
   const isPending = createMutation.isPending || updateMutation.isPending
 
   return (
-    <div className="space-y-6 text-left max-w-5xl mx-auto">
+    <div className="space-y-6 text-left">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-white tracking-tight">Cabang Perpustakaan (Libraries)</h1>
@@ -280,9 +279,8 @@ export function StaffLibrariesPage() {
               onChange={(e) => setType(e.target.value)}
               className="w-full bg-neutral-950 border border-neutral-850 hover:border-neutral-800 text-neutral-200 focus:border-indigo-500 rounded-xl px-4 py-3 text-sm focus:outline-none transition-colors duration-200 cursor-pointer"
             >
-              <option value="main">Perpustakaan Pusat (Main)</option>
-              <option value="branch">Perpustakaan Cabang (Branch)</option>
-              <option value="digital">Layanan Digital (Digital)</option>
+              <option value="central">Perpustakaan Pusat (Central)</option>
+              <option value="faculty">Perpustakaan Fakultas (Faculty)</option>
             </select>
           </div>
         </form>

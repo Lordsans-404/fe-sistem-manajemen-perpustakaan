@@ -85,7 +85,7 @@ export function DefaultLayout() {
           />
         )}
 
-        <main className="flex-1 p-4 md:ml-8 md:p-8 bg-neutral-950 overflow-y-auto w-full md:pl-64">
+        <main className="flex-1 p-4 md:p-8 bg-neutral-950 overflow-y-auto md:ml-64">
           <Outlet />
         </main>
       </div>

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { useAuthStore } from '@/store/authStore'
 import { useBook } from '@/hooks/useBooks'
 import {
   useBookCopies,
@@ -22,6 +23,10 @@ export function StaffBookCopiesPage() {
   const { data: book, isLoading: isBookLoading } = useBook(id)
   const { data: copiesData, isLoading: isCopiesLoading } = useBookCopies({ book_id: id })
   const { data: librariesData } = useLibraries({ page_size: 50 })
+
+  const user = useAuthStore((s) => s.user)
+  const role = user?.staff_profile?.role
+  const canDelete = role === 'admin' || role === 'supervisor'
 
   const copies = copiesData?.results ?? []
   const libraries = librariesData?.results ?? []
@@ -204,7 +209,7 @@ export function StaffBookCopiesPage() {
   const isPending = createMutation.isPending || updateMutation.isPending
 
   return (
-    <div className="space-y-6 text-left max-w-5xl mx-auto">
+    <div className="space-y-6 text-left">
       {/* Back link */}
       <button
         onClick={() => navigate('/app/staff/books')}
@@ -277,13 +282,6 @@ export function StaffBookCopiesPage() {
                         >
                           Edit
                         </Button>
-                        <Button
-                          variant="secondary"
-                          className="py-1 px-2.5 text-xs text-red-400 hover:text-red-300 hover:bg-red-950/20"
-                          onClick={() => setIsDeletingCopy(copy)}
-                        >
-                          Hapus
-                        </Button>
                       </div>
                     </td>
                   </tr>
@@ -301,6 +299,18 @@ export function StaffBookCopiesPage() {
         title={editingCopy ? 'Edit Salinan Fisik' : 'Tambah Salinan Fisik'}
         footer={
           <>
+            {editingCopy && canDelete && (
+              <Button
+                variant="secondary"
+                className="mr-auto text-red-400 hover:text-red-300 hover:bg-red-950/20"
+                onClick={() => {
+                  setIsFormModalOpen(false)
+                  setIsDeletingCopy(editingCopy)
+                }}
+              >
+                Hapus Salinan
+              </Button>
+            )}
             <Button variant="secondary" onClick={() => setIsFormModalOpen(false)} disabled={isPending}>
               Batal
             </Button>

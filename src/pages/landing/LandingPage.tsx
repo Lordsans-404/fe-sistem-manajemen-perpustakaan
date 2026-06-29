@@ -264,10 +264,10 @@ export function LandingPage() {
                   <details key={item.q} open={i === 0} className="group border border-outline-variant rounded-md bg-surface-container-lowest overflow-hidden">
                     <summary className="flex justify-between items-center p-lg cursor-pointer list-none [&::-webkit-details-marker]:hidden">
                       <span className="text-label-md text-on-surface font-medium pr-md">{item.q}</span>
-                      <svg 
-                        className="w-5 h-5 text-primary group-open:rotate-180 transition-transform shrink-0" 
-                        fill="none" 
-                        viewBox="0 0 24 24" 
+                      <svg
+                        className="w-5 h-5 text-primary group-open:rotate-180 transition-transform shrink-0"
+                        fill="none"
+                        viewBox="0 0 24 24"
                         stroke="currentColor"
                       >
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -306,7 +306,7 @@ export function LandingPage() {
             </div>
           </div>
           <div className="md:col-span-4 border-t border-outline-variant pt-lg text-center">
-            <p className="text-body-sm text-secondary">© 2024 Perpustakaan Kampus. Hak Cipta Dilindungi.</p>
+            <p className="text-body-sm text-secondary">© 2026 Perpustakaan Kampus. Hak Cipta Dilindungi.</p>
           </div>
         </div>
       </footer>

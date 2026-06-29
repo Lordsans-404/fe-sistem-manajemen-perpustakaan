@@ -97,7 +97,7 @@ export function ProfilePage() {
   const isVerified = user?.member_profile?.is_verified ?? false
 
   return (
-    <div className="space-y-8 text-left max-w-4xl mx-auto">
+    <div className="space-y-8 text-left">
       <div>
         <h1 className="text-2xl font-bold text-white tracking-tight">Pengaturan Profil</h1>
         <p className="text-sm text-neutral-400">

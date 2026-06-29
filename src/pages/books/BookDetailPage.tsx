@@ -125,7 +125,7 @@ export function BookDetailPage() {
   }
 
   return (
-    <div className="space-y-8 text-left max-w-5xl mx-auto">
+    <div className="space-y-8 text-left">
       <button
         onClick={() => navigate('/app/books')}
         className="inline-flex items-center gap-2 text-neutral-400 hover:text-white transition-colors text-sm font-semibold cursor-pointer"
@@ -199,7 +199,7 @@ export function BookDetailPage() {
         ) : (
           <div className="border border-neutral-800 bg-neutral-900 rounded-2xl overflow-hidden shadow-xl">
             <div className="overflow-x-auto">
-              <table className="w-full text-sm text-left border-collapse">
+              <table className="w-full text-sm text-center border-collapse">
                 <thead>
                   <tr className="bg-neutral-950/40 border-b border-neutral-800 text-neutral-400 font-semibold">
                     <th className="px-6 py-4">Cabang & Lokasi</th>

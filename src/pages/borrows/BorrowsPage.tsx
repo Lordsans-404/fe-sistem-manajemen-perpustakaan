@@ -46,7 +46,7 @@ export function BorrowsPage() {
   }
 
   return (
-    <div className="space-y-6 text-left max-w-5xl mx-auto">
+    <div className="space-y-6 text-left">
       <div>
         <h1 className="text-2xl font-bold text-white tracking-tight">Peminjaman Saya</h1>
         <p className="text-sm text-neutral-400">
@@ -96,7 +96,7 @@ export function BorrowsPage() {
         <>
           <div className="border border-neutral-800 bg-neutral-900 rounded-2xl overflow-hidden shadow-xl">
             <div className="overflow-x-auto">
-              <table className="w-full text-sm text-left border-collapse">
+              <table className="w-full text-sm text-center border-collapse">
                 <thead>
                   <tr className="bg-neutral-950/40 border-b border-neutral-800 text-neutral-400 font-semibold">
                     <th className="px-6 py-4">Judul Buku</th>
@@ -105,6 +105,7 @@ export function BorrowsPage() {
                     <th className="px-6 py-4">Batas Kembali</th>
                     {activeTab === 'returned' && <th className="px-6 py-4">Tanggal Kembali</th>}
                     <th className="px-6 py-4">Status</th>
+                    <th className="px-6 py-4">Estimasi Denda</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-neutral-800 text-neutral-300">
@@ -145,6 +146,15 @@ export function BorrowsPage() {
                       )}
                       <td className="px-6 py-4">
                         {getStatusBadge(borrow)}
+                      </td>
+                      <td className="px-6 py-4 font-medium text-sm">
+                        {borrow.is_overdue && !borrow.return_date && borrow.overdue_days ? (
+                          <span className="text-red-400 bg-red-950/30 px-2.5 py-1 rounded-md border border-red-900/50 text-xs whitespace-nowrap">
+                            Est. Rp {(borrow.overdue_days * 1000).toLocaleString('id-ID')}
+                          </span>
+                        ) : (
+                          <span className="text-neutral-500">-</span>
+                        )}
                       </td>
                     </tr>
                   ))}

@@ -63,7 +63,7 @@ export function FinesPage() {
   }
 
   return (
-    <div className="space-y-6 text-left max-w-5xl mx-auto">
+    <div className="space-y-6 text-left">
       <div>
         <h1 className="text-2xl font-bold text-white tracking-tight">Denda Saya</h1>
         <p className="text-sm text-neutral-400">
@@ -125,7 +125,7 @@ export function FinesPage() {
         <>
           <div className="border border-neutral-800 bg-neutral-900 rounded-2xl overflow-hidden shadow-xl">
             <div className="overflow-x-auto">
-              <table className="w-full text-sm text-left border-collapse">
+              <table className="w-full text-sm text-center border-collapse">
                 <thead>
                   <tr className="bg-neutral-950/40 border-b border-neutral-800 text-neutral-400 font-semibold">
                     <th className="px-6 py-4">Buku & Transaksi</th>
