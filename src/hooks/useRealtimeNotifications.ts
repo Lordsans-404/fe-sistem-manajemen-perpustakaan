@@ -126,6 +126,9 @@ export function useDueDateReminders(borrows: BorrowSummary[] = []) {
 
     let hasChanges = false
 
+    const overdueBorrows: BorrowSummary[] = []
+    const warningBorrows: BorrowSummary[] = []
+
     borrows.forEach((borrow) => {
       if (borrow.status !== 'active') return
 
@@ -142,16 +145,56 @@ export function useDueDateReminders(borrows: BorrowSummary[] = []) {
       const diffTime = due.getTime() - today.getTime()
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
 
-      if (diffDays === 3 || diffDays === 1) {
-        showBrowserNotification(
-          "⏳ Pengingat Pengembalian Buku",
-          `Buku "${borrow.book_title}" harus dikembalikan dalam ${diffDays} hari lagi.`,
-          true // toastOnly: true, jangan ganggu user dengan OS notification berulang
-        )
+      if (borrow.is_overdue) {
+        overdueBorrows.push(borrow)
+        notifiedTimes[borrow.id] = now
+        hasChanges = true
+      } else if (diffDays === 3 || diffDays === 1) {
+        warningBorrows.push(borrow)
         notifiedTimes[borrow.id] = now
         hasChanges = true
       }
     })
+
+    if (overdueBorrows.length > 0) {
+      if (overdueBorrows.length <= 2) {
+        overdueBorrows.forEach((b) => {
+          showBrowserNotification(
+            "🚨 Peringatan Keterlambatan",
+            `Buku "${b.book_title}" sudah terlambat ${b.overdue_days} hari, mohon segera dikembalikan, terimakasih.`,
+            false,
+            0
+          )
+        })
+      } else {
+        const titles = overdueBorrows.map((b) => `"${b.book_title}"`).join(', ')
+        showBrowserNotification(
+          "🚨 Peringatan Keterlambatan",
+          `Ada ${overdueBorrows.length} buku yang terlambat: ${titles}. Mohon segera dikembalikan, terimakasih.`,
+          false,
+          0
+        )
+      }
+    }
+
+    if (warningBorrows.length > 0) {
+      if (warningBorrows.length <= 2) {
+        warningBorrows.forEach((b) => {
+          const diffDays = Math.ceil((new Date(b.due_date).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
+          showBrowserNotification(
+            "⏳ Pengingat Pengembalian Buku",
+            `Buku "${b.book_title}" harus dikembalikan dalam ${diffDays} hari lagi.`,
+            true
+          )
+        })
+      } else {
+        showBrowserNotification(
+          "⏳ Pengingat Pengembalian Buku",
+          `Ada ${warningBorrows.length} buku yang mendekati batas waktu pengembalian.`,
+          true
+        )
+      }
+    }
 
     if (hasChanges) {
       localStorage.setItem(storageKey, JSON.stringify(notifiedTimes))

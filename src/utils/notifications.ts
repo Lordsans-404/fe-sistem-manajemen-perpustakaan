@@ -1,8 +1,8 @@
 import { useToastStore } from '@/store/toastStore'
 
-export function showBrowserNotification(title: string, body: string, toastOnly = false) {
+export function showBrowserNotification(title: string, body: string, toastOnly = false, duration = 5000) {
   // 1. Selalu tampilkan In-App Toast
-  useToastStore.getState().addToast(title, body)
+  useToastStore.getState().addToast(title, body, duration)
 
   if (toastOnly) return
 
